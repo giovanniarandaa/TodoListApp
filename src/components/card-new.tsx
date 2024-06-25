@@ -4,9 +4,10 @@ import { Button } from "./ui/button"
 import { ElementRef, KeyboardEventHandler, forwardRef, useRef } from "react";
 import { FormTextarea } from "./form-textarea";
 import { useBoardsStorage } from "@/zustand/boards";
+import { BoardNameType } from "@/utils/types";
 
 interface CardNewProps {
-  board: "pendiente" | "enProgreso" | "terminado";
+  board: BoardNameType;
   enableEditing: () => void;
   disableEditing: () => void;
   isEditing: boolean;
