@@ -3,6 +3,7 @@
 import { DragDropContext } from "@hello-pangea/dnd";
 import { BoardItem } from "./board-item";
 import { useBoardsStorage } from "@/zustand/boards";
+import { BoardNameType } from "@/utils/types";
 
 const Boards = [
   {
@@ -37,8 +38,8 @@ export const BoardList = () => {
     }
 
     boardStorage.moveCard(
-      source.droppableId as "pendiente" | "terminado" | "enProgreso",
-      destination.droppableId as "pendiente" | "terminado" | "enProgreso",
+      source.droppableId as BoardNameType,
+      destination.droppableId as BoardNameType,
       source.index,
       destination.index
     );
@@ -51,9 +52,9 @@ export const BoardList = () => {
         {Boards.map((board, index) => (
           <BoardItem
             key={board.id}
-            id={board.id as "pendiente" | "terminado" | "enProgreso"}
+            id={board.id as BoardNameType}
             name={board.name}
-            data={boardStorage[board.id as "pendiente" | "terminado" | "enProgreso"]}
+            data={boardStorage[board.id as BoardNameType]}
           />
         ))}
         <div className="w-1 flex-shrink-0" />

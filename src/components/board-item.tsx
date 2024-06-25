@@ -3,17 +3,16 @@ import { cn } from "@/utils/utils";
 import { CardItem } from "./card-item";
 import { CardNew } from "./card-new";
 import { ElementRef, useRef, useState } from "react";
-import { useBoardsStorage } from "@/zustand/boards";
 import { Droppable } from "@hello-pangea/dnd";
 import { CardInterface } from "@/utils/interface";
+import { BoardNameType } from "@/utils/types";
 
 interface BoardItemProps {
-  id: "pendiente" | "enProgreso" | "terminado";
+  id: BoardNameType;
   name: string;
   data: CardInterface[];
 }
 export const BoardItem = ({ name, id, data }: BoardItemProps) => {
-  const boards = useBoardsStorage();
   const textareaRef = useRef<ElementRef<"textarea">>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -47,7 +46,7 @@ export const BoardItem = ({ name, id, data }: BoardItemProps) => {
               )}
             >
               {data.map((card, index) => (
-                <CardItem key={card.id} index={index} {...card} />
+                <CardItem key={card.id} index={index} board={id} {...card} />
               ))}
               {provided.placeholder}
             </ol>

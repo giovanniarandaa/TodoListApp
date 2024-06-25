@@ -1,19 +1,23 @@
 import { CardInterface } from "@/utils/interface";
 import { create } from "zustand";
 import { v4 as uuidv4 } from 'uuid';
+import { BoardNameType } from "@/utils/types";
 
 interface BoardsStorageProps {
   pendiente: CardInterface[],
   enProgreso: CardInterface[],
   terminado: CardInterface[],
-  addCard: (board: "pendiente" | "enProgreso" | "terminado", cardName: string) => void,
-  removeCard: (board: "pendiente" | "enProgreso" | "terminado", cardId: string) => void,
+  addCard: (board: BoardNameType, cardName: string) => void,
+  removeCard: (board: BoardNameType, cardId: string) => void,
   moveCard: (
-    sourceBoard: "pendiente" | "enProgreso" | "terminado",
-    destinationBoard: "pendiente" | "enProgreso" | "terminado",
+    sourceBoard: BoardNameType,
+    destinationBoard: BoardNameType,
     sourceIndex: number,
     destinationIndex: number
   ) => void;
+  completedCard: (board: BoardNameType, cardId: string) => void;
+  deletedCard: (board: BoardNameType, cardId: string) => void;
+  uncompletedCard: (board: BoardNameType, cardId: string) => void;
 }
 
 export const useBoardsStorage = create<BoardsStorageProps>((set) => ({
@@ -21,7 +25,7 @@ export const useBoardsStorage = create<BoardsStorageProps>((set) => ({
   enProgreso: [],
   terminado: [],
   addCard: (board, cardName ) => {
-    const newCard:CardInterface = { id: uuidv4(), name: cardName };
+    const newCard:CardInterface = { id: uuidv4(), name: cardName, completed: false};
     set((state) => ({
       [board]: [...state[board], newCard]
     }));
@@ -45,4 +49,29 @@ export const useBoardsStorage = create<BoardsStorageProps>((set) => ({
       };
     });
   },
+  completedCard: (board, cardId) => {
+    set((state) => ({
+      [board]: state[board].map((c) => {
+        if (c.id === cardId) {
+          return { ...c, completed: true };
+        }
+        return c;
+      })
+    }));
+  },
+  deletedCard: (board, cardId) => {
+    set((state) => ({
+      [board]: state[board].filter((c) => c.id !== cardId)
+    }));
+  },
+  uncompletedCard: (board, cardId) => {
+    set((state) => ({
+      [board]: state[board].map((c) => {
+        if (c.id === cardId) {
+          return { ...c, completed: false };
+        }
+        return c;
+      })
+    }));
+  }
 }));
